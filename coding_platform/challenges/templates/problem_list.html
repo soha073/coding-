@@ -1,0 +1,22 @@
+<!-- challenges/templates/challenges/problem_list.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Problem List</title>
+</head>
+<body>
+    <h1>Available Problems</h1>
+    <ul>
+        {% for problem in problems %}
+            <li>
+                <a href="{% url 'problem_detail' problem.pk %}">
+                    {{ problem.title }}
+                </a> 
+                - Difficulty: {{ problem.difficulty }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

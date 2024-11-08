@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+select {
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#result {
+    font-weight: bold;
+    margin-top: 20px;
+    color: green;
+}
+
+#leaderboard table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#leaderboard th, #leaderboard td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+#leaderboard th {
+    background-color: #f2f2f2;
+}

@@ -1,0 +1,33 @@
+<!-- challenges/templates/challenges/problem_detail.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ problem.title }}</title>
+</head>
+<body>
+    <h1>{{ problem.title }}</h1>
+    <p><strong>Difficulty:</strong> {{ problem.difficulty }}</p>
+    <p>{{ problem.description }}</p>
+
+    <h2>Submit Your Solution</h2>
+    <form method="post" action="{% url 'submit_code' %}">
+        {% csrf_token %}
+        <input type="hidden" name="problem_id" value="{{ problem.id }}">
+        
+        <label for="language">Programming Language:</label>
+        <select name="language" id="language">
+            <option value="python">Python</option>
+            <!-- Add more options for other languages if supported -->
+        </select>
+        
+        <label for="code">Your Code:</label><br>
+        <textarea name="code" id="code" rows="10" cols="50" placeholder="Write your solution here"></textarea><br>
+        
+        <button type="submit">Submit Code</button>
+    </form>
+</body>
+</html>
+
+

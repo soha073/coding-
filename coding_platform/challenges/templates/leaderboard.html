@@ -1,0 +1,58 @@
+<!-- challenges/templates/challenges/leaderboard.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+</head>
+<body>
+    <h1>Leaderboard</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Problems Solved</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in leaderboard %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ entry.user.username }}</td>
+                    <td>{{ entry.problems_solved }}</td>
+                    <td>{{ entry.score }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No leaderboard data available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
+<h1>Leaderboard</h1>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Problems Solved</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in leaderboard_entries %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ entry.user.username }}</td>
+                <td>{{ entry.problems_solved }}</td>
+                <td>{{ entry.score }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

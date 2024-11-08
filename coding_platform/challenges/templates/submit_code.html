@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Code</title>
+    <!-- Include Ace Editor CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+</head>
+<body>
+
+<h1>Submit Code</h1>
+
+<form action="{% url 'submit_code' %}" method="POST">
+    {% csrf_token %}
+    
+    <label for="language">Language:</label>
+    <select name="language">
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="c">C</option>
+        <!-- Add more languages as needed -->
+    </select>
+
+    <label for="code">Code:</label>
+    <!-- Ace Editor container -->
+    <div id="code-editor" style="height: 300px; width: 100%; border: 1px solid #ddd;"></div>
+
+    <!-- Hidden textarea for form submission -->
+    <textarea id="code" name="code" style="display: none;"></textarea>
+
+    <button type="submit">Submit Code</button>
+</form>
+
+<script type="text/javascript">
+    // Initialize Ace Editor
+    var editor = ace.edit("code-editor");
+    editor.setTheme("ace/theme/monokai");  // Set theme
+    editor.session.setMode("ace/mode/python");  // Default to Python
+
+    // Update the hidden textarea with editor content before form submission
+    document.querySelector('form').onsubmit = function () {
+        document.getElementById("code").value = editor.getValue();
+    };
+</script>
+
+</body>
+</html>
+<!-- Loading spinner (initially hidden) -->
+<div id="loading" style="display: none;">
+    <p>Submitting... Please wait.</p>
+</div>
+
+<!-- JavaScript to show loading spinner on form submission -->
+<script type="text/javascript">
+    document.querySelector('form').onsubmit = function () {
+        document.getElementById("loading").style.display = "block";
+    };
+</script>
+
+<form action="{% url 'handle_submission' %}" method="post">
+    {% csrf_token %}
+    <label for="code">Code:</label><br>
+    <textarea name="code" rows="10" cols="50"></textarea><br><br>
+
+    <label for="language">Language:</label>
+    <select name="language">
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="cpp">C++</option>
+    </select><br><br>
+
+    <label for="problem_id">Problem ID:</label>
+    <input type="text" name="problem_id"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Code</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Submit Your Code</h1>
+        
+        <!-- Form for submitting code -->
+        <form id="codeForm">
+            <label for="code">Enter Your Code:</label><br>
+            <textarea id="code" name="code" rows="10" cols="50"></textarea><br><br>
+
+            <label for="language">Choose Language:</label><br>
+            <select id="language" name="language">
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+            </select><br><br>
+
+            <input type="hidden" id="problem_id" value="{{ problem.id }}">
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Displaying the result -->
+        <div id="result" style="margin-top: 20px; font-size: 16px;"></div>
+
+        <!-- Displaying Leaderboard -->
+        <div id="leaderboard" style="margin-top: 30px;">
+            <h3>Leaderboard</h3>
+            <table id="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic leaderboard content will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // Submit the code and get the result
+            $('#codeForm').submit(function(e){
+                e.preventDefault();  // Prevent the default form submission
+
+                let code = $('#code').val();
+                let language = $('#language').val();
+                let problem_id = $('#problem_id').val();
+
+                // AJAX request to submit the code
+                $.ajax({
+                    url: '{% url "handle_submission" %}',  // URL of your submission handling view
+                    method: 'POST',
+                    data: {
+                        'code': code,
+                        'language': language,
+                        'problem_id': problem_id,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        // Display the result of the code execution
+                        $('#result').text(response.output);
+
+                        // Update the leaderboard dynamically
+                        updateLeaderboard();
+                    },
+                    error: function(xhr, status, error) {
+                        $('#result').text('Error: Unable to process the code submission');
+                    }
+                });
+            });
+
+            // Function to update leaderboard table
+            function updateLeaderboard() {
+                $.ajax({
+                    url: '{% url "leaderboard" %}',  // URL to get the leaderboard
+                    method: 'GET',
+                    success: function(response) {
+                        // Clear current leaderboard
+                        $('#leaderboardTable tbody').empty();
+
+                        // Populate new leaderboard
+                        response.leaderboard.forEach((entry, index) => {
+                            $('#leaderboardTable tbody').append(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${entry.user}</td>
+                                    <td>${entry.score}</td>
+                                </tr>
+                            `);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error loading leaderboard');
+                    }
+                });
+            }
+
+            // Initially load the leaderboard
+            updateLeaderboard();
+        });
+    </script>
+</body>
+</html>
