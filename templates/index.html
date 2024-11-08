@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Coding Challenges</h1>
+<ul>
+    {% for problem in problems %}
+    <li><a href="{{ url_for('submit', problem_id=problem.id) }}">{{ problem.title }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}
