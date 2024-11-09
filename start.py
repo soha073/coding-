@@ -2,7 +2,7 @@ from multiprocessing import Process
 import os
 
 def run_django():
-    os.system("gunicorn your_django_project.wsgi --bind 0.0.0.0:8001")
+    os.system("gunicorn coding_platform.wsgi --bind 0.0.0.0:8001")
 
 def run_flask():
     os.system("gunicorn app:app --bind 0.0.0.0:8000")
